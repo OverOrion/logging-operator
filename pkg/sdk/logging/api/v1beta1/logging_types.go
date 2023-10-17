@@ -155,7 +155,7 @@ const (
 	DefaultFluentbitBufferVolumeImageTag        = "v0.7.1"
 	DefaultFluentbitBufferStorageVolumeName     = "fluentbit-buffer"
 	DefaultFluentdImageRepository               = "ghcr.io/overorion/fluentd"
-	DefaultFluentdImageTag                      = "v1.16-gemfile-lock"
+	DefaultFluentdImageTag                      = "v1.16-gemfile-lock2"
 	DefaultFluentdBufferStorageVolumeName       = "fluentd-buffer"
 	DefaultFluentdDrainWatchImageRepository     = "ghcr.io/kube-logging/fluentd-drain-watch"
 	DefaultFluentdDrainWatchImageTag            = "v0.2.1"
