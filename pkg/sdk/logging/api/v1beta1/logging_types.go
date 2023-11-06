@@ -519,15 +519,3 @@ func (l *Logging) GetSyslogNGLabels(component string) map[string]string {
 func GenerateLoggingRefLabels(loggingRef string) map[string]string {
 	return map[string]string{"app.kubernetes.io/managed-by": loggingRef}
 }
-
-// GetFluentdMetricsPath returns the right Fluentd metrics endpoint
-// depending on the number of workers and the user configuration
-func (l *Logging) GetFluentdMetricsPath() string {
-	if l.Spec.FluentdSpec.Metrics.Path == "" {
-		if l.Spec.FluentdSpec.Workers > 1 {
-			return "/aggregated_metrics"
-		}
-		return "/metrics"
-	}
-	return l.Spec.FluentdSpec.Metrics.Path
-}

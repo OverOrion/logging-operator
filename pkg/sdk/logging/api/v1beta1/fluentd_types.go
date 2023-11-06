@@ -116,6 +116,18 @@ type FluentOutLogrotate struct {
 	Size    string `json:"size,omitempty"`
 }
 
+// GetFluentdMetricsPath returns the right Fluentd metrics endpoint
+// depending on the number of workers and the user configuration
+func (f *FluentdSpec) GetFluentdMetricsPath() string {
+	if f.Metrics.Path == "" {
+		if f.Workers > 1 {
+			return "/aggregated_metrics"
+		}
+		return "/metrics"
+	}
+	return f.Metrics.Path
+}
+
 func (f *FluentdSpec) SetDefaults() error {
 	if f != nil { // nolint:nestif
 		if f.FluentdPvcSpec != nil {
@@ -163,7 +175,7 @@ func (f *FluentdSpec) SetDefaults() error {
 			}
 			if f.Metrics.PrometheusAnnotations {
 				f.Annotations["prometheus.io/scrape"] = "true"
-				f.Annotations["prometheus.io/path"] = l.GetFluentdMetricsPath()
+				f.Annotations["prometheus.io/path"] = f.GetFluentdMetricsPath()
 				f.Annotations["prometheus.io/port"] = fmt.Sprintf("%d", f.Metrics.Port)
 			}
 		}
@@ -360,6 +372,7 @@ func (f *FluentdSpec) SetDefaults() error {
 			}
 		}
 	}
+	return nil
 }
 
 // +kubebuilder:object:generate=true
