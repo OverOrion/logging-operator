@@ -107,6 +107,22 @@ type FluentdSpec struct {
 	CompressConfigFile      bool                         `json:"compressConfigFile,omitempty"`
 }
 
+// +name:"FluentdSpecRef"
+// +weight:"200"
+type _hugoFluentdSpecRef interface{} //nolint:deadcode,unused
+
+// +name:"FluentdSpecRef"
+// +version:"v1beta1"
+// +description:"FluentdSpecRef is a reference to the desired Fluentd state"
+type _metaFluentdSpecRef interface{} //nolint:deadcode,unused
+
+// +kubebuilder:object:generate=true
+
+// FluentdSpecRef is a reference to the desired Fluentd state
+type FluentdSpecRef struct {
+	FluentdSpec `json:",inline"`
+}
+
 // +kubebuilder:object:generate=true
 
 type FluentOutLogrotate struct {
