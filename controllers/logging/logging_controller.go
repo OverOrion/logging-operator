@@ -169,7 +169,7 @@ func (r *LoggingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		),
 	}
 
-	if logging.Spec.FluentdSpec != nil && logging.Spec.SyslogNGSpec != nil {
+	if logging.AreMultipleAggregatorsSet() {
 		return ctrl.Result{}, errors.New("fluentd and syslogNG cannot be enabled simultaneously")
 	}
 
