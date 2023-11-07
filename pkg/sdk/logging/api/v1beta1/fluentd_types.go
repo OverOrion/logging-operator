@@ -24,6 +24,7 @@ import (
 	"github.com/spf13/cast"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/kube-logging/logging-operator/pkg/sdk/logging/model/input"
 )
@@ -106,20 +107,31 @@ type FluentdSpec struct {
 	CompressConfigFile      bool                         `json:"compressConfigFile,omitempty"`
 }
 
-// +name:"FluentdSpecRef"
+// +name:"FluentdConfig"
 // +weight:"200"
-type _hugoFluentdSpecRef interface{} //nolint:deadcode,unused
+type _hugoFluentdConfig interface{} //nolint:deadcode,unused
 
-// +name:"FluentdSpecRef"
+// +name:"FluentdConfig"
 // +version:"v1beta1"
-// +description:"FluentdSpecRef is a reference to the desired Fluentd state"
-type _metaFluentdSpecRef interface{} //nolint:deadcode,unused
+// +description:"FluentdConfig is a reference to the desired Fluentd state"
+type _metaFluentdConfig interface{} //nolint:deadcode,unused
 
-// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:categories=logging-all
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
-// FluentdSpecRef is a reference to the desired Fluentd state
-type FluentdSpecRef struct {
-	FluentdSpec `json:",inline"`
+// NodeAgent
+type FluentdConfig struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   FluentdSpec     `json:"spec,omitempty"`
+	Status NodeAgentStatus `json:"status,omitempty"`
+}
+
+func init() {
+	SchemeBuilder.Register(&FluentdConfig{})
 }
 
 // +kubebuilder:object:generate=true

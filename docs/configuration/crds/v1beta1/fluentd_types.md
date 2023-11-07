@@ -215,6 +215,33 @@ Default: -
 Default: -
 
 
+---
+title: FluentdConfig
+weight: 200
+generated_file: true
+---
+
+## FluentdConfig
+
+NodeAgent
+
+###  (metav1.TypeMeta, required) {#fluentdconfig-}
+
+Default: -
+
+### metadata (metav1.ObjectMeta, optional) {#fluentdconfig-metadata}
+
+Default: -
+
+### spec (FluentdSpec, optional) {#fluentdconfig-spec}
+
+Default: -
+
+### status (NodeAgentStatus, optional) {#fluentdconfig-status}
+
+Default: -
+
+
 ## FluentOutLogrotate
 
 ### enabled (bool, required) {#fluentoutlogrotate-enabled}
