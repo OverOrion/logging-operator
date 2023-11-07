@@ -246,6 +246,28 @@ Default: -
 Default: -
 
 
+## FluentdConfigStatus
+
+FluentdConfigStatus
+
+
+## FluentdConfigList
+
+FluentdConfigList
+
+###  (metav1.TypeMeta, required) {#fluentdconfiglist-}
+
+Default: -
+
+### metadata (metav1.ListMeta, optional) {#fluentdconfiglist-metadata}
+
+Default: -
+
+### items ([]FluentdConfig, required) {#fluentdconfiglist-items}
+
+Default: -
+
+
 ## FluentOutLogrotate
 
 ### enabled (bool, required) {#fluentoutlogrotate-enabled}
