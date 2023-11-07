@@ -123,6 +123,7 @@ type _metaFluentdConfig interface{} //nolint:deadcode,unused
 
 // NodeAgent
 type FluentdConfig struct {
+	LoggingRef        string `json:"loggingRef,omitempty"`
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 

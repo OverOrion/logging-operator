@@ -225,6 +225,10 @@ generated_file: true
 
 NodeAgent
 
+### loggingRef (string, optional) {#fluentdconfig-loggingref}
+
+Default: -
+
 ###  (metav1.TypeMeta, required) {#fluentdconfig-}
 
 Default: -
