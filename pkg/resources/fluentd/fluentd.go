@@ -308,7 +308,7 @@ func (r *Reconciler) reconcileDrain(ctx context.Context) (*reconcile.Result, err
 	}
 
 	nsOpt := client.InNamespace(r.Logging.Spec.ControlNamespace)
-	fluentdLabelSet := r.Logging.GetFluentdLabels(ComponentFluentd)
+	fluentdLabelSet := r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec)
 
 	var pvcList corev1.PersistentVolumeClaimList
 	if err := r.Client.List(ctx, &pvcList, nsOpt,
@@ -343,7 +343,7 @@ func (r *Reconciler) reconcileDrain(ctx context.Context) (*reconcile.Result, err
 	}
 
 	var jobList batchv1.JobList
-	if err := r.Client.List(ctx, &jobList, nsOpt, client.MatchingLabels(r.Logging.GetFluentdLabels(ComponentDrainer))); err != nil {
+	if err := r.Client.List(ctx, &jobList, nsOpt, client.MatchingLabels(r.Logging.GetFluentdLabels(ComponentDrainer, fluentdSpec))); err != nil {
 		return nil, errors.WrapIf(err, "listing buffer drainer jobs")
 	}
 

@@ -15,6 +15,7 @@
 package fluentd
 
 import (
+	"context"
 	"strings"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -130,9 +131,11 @@ func withoutFluentOutLogrotate(spec *v1beta1.FluentdSpec) *v1beta1.FluentdSpec {
 }
 
 func (r *Reconciler) getDrainerLabels() map[string]string {
-	labels := r.Logging.GetFluentdLabels(ComponentDrainer)
+	ctx := context.TODO()
+	fluentdSpec := r.getFluentdSpec(ctx)
+	labels := r.Logging.GetFluentdLabels(ComponentDrainer, fluentdSpec)
 
-	for key, value := range r.Logging.Spec.FluentdSpec.Scaling.Drain.Labels {
+	for key, value := range fluentdSpec.Scaling.Drain.Labels {
 		labels[key] = value
 	}
 
