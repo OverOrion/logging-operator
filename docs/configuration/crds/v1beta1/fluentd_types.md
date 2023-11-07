@@ -221,49 +221,45 @@ weight: 200
 generated_file: true
 ---
 
-## FluentdConfig
+## Fluentd
 
 NodeAgent
 
-### loggingRef (string, optional) {#fluentdconfig-loggingref}
+###  (metav1.TypeMeta, required) {#fluentd-}
 
 Default: -
 
-###  (metav1.TypeMeta, required) {#fluentdconfig-}
+### metadata (metav1.ObjectMeta, optional) {#fluentd-metadata}
 
 Default: -
 
-### metadata (metav1.ObjectMeta, optional) {#fluentdconfig-metadata}
+### spec (FluentdSpec, optional) {#fluentd-spec}
 
 Default: -
 
-### spec (FluentdSpec, optional) {#fluentdconfig-spec}
-
-Default: -
-
-### status (NodeAgentStatus, optional) {#fluentdconfig-status}
+### status (FluentdStatus, optional) {#fluentd-status}
 
 Default: -
 
 
-## FluentdConfigStatus
+## FluentdStatus
 
-FluentdConfigStatus
+FluentdStatus
 
 
-## FluentdConfigList
+## FluentdList
 
-FluentdConfigList
+FluentdList
 
-###  (metav1.TypeMeta, required) {#fluentdconfiglist-}
-
-Default: -
-
-### metadata (metav1.ListMeta, optional) {#fluentdconfiglist-metadata}
+###  (metav1.TypeMeta, required) {#fluentdlist-}
 
 Default: -
 
-### items ([]FluentdConfig, required) {#fluentdconfiglist-items}
+### metadata (metav1.ListMeta, optional) {#fluentdlist-metadata}
+
+Default: -
+
+### items ([]Fluentd, required) {#fluentdlist-items}
 
 Default: -
 

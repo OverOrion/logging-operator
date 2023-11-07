@@ -122,29 +122,29 @@ type _metaFluentdConfig interface{} //nolint:deadcode,unused
 // +kubebuilder:storageversion
 
 // NodeAgent
-type FluentdConfig struct {
+type Fluentd struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   FluentdSpec     `json:"spec,omitempty"`
-	Status NodeAgentStatus `json:"status,omitempty"`
+	Spec   FluentdSpec   `json:"spec,omitempty"`
+	Status FluentdStatus `json:"status,omitempty"`
 }
 
-// FluentdConfigStatus
-type FluentdConfigStatus struct {
+// FluentdStatus
+type FluentdStatus struct {
 }
 
 // +kubebuilder:object:root=true
 
-// FluentdConfigList
-type FluentdConfigList struct {
+// FluentdList
+type FluentdList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []FluentdConfig `json:"items"`
+	Items           []Fluentd `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&FluentdConfig{}, &FluentdConfigList{})
+	SchemeBuilder.Register(&Fluentd{}, &FluentdList{})
 }
 
 // +kubebuilder:object:generate=true

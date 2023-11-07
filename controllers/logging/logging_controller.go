@@ -175,7 +175,7 @@ func (r *LoggingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	var loggingDataProvider loggingdataprovider.LoggingDataProvider
 
-	fluentdSpec := loggingResources.FluentdSpec()
+	fluentdSpec := loggingResources.GetFluentdSpec()
 	if fluentdSpec != nil {
 		fluentdConfig, secretList, err := r.clusterConfigurationFluentd(loggingResources)
 		if err != nil {
@@ -434,8 +434,8 @@ func SetupLoggingWithManager(mgr ctrl.Manager, logger logr.Logger) *ctrl.Builder
 			return reconcileRequestsForLoggingRef(loggingList.Items, o.Spec.LoggingRef)
 		case *loggingv1beta1.LoggingRoute:
 			return reconcileRequestsForLoggingRef(loggingList.Items, o.Spec.Source)
-		case *loggingv1beta1.FluentdConfig:
-			return reconcileRequestsForLoggingRef(loggingList.Items, o.LoggingRef)
+		case *loggingv1beta1.Fluentd:
+			return reconcileRequestsForLoggingRef(loggingList.Items, o.Namespace)
 		case *corev1.Secret:
 			r := regexp.MustCompile(`^logging\.banzaicloud\.io/(.*)`)
 			var requestList []reconcile.Request
@@ -486,7 +486,7 @@ func SetupLoggingWithManager(mgr ctrl.Manager, logger logr.Logger) *ctrl.Builder
 		Watches(&loggingv1beta1.SyslogNGFlow{}, requestMapper).
 		Watches(&corev1.Secret{}, requestMapper).
 		Watches(&loggingv1beta1.LoggingRoute{}, requestMapper).
-		Watches(&loggingv1beta1.FluentdConfig{}, requestMapper)
+		Watches(&loggingv1beta1.Fluentd{}, requestMapper)
 
 	// TODO remove with the next major release
 	if os.Getenv("ENABLE_NODEAGENT_CRD") != "" {

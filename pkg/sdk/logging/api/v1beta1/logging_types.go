@@ -189,8 +189,10 @@ func (l *Logging) SetDefaults() error {
 	if !l.Spec.FlowConfigCheckDisabled && l.Status.ConfigCheckResults == nil {
 		l.Status.ConfigCheckResults = make(map[string]bool)
 	}
-	if err := l.Spec.FluentdSpec.SetDefaults(); err != nil {
-		return err
+	if len(l.Spec.FluentdRef) == 0 {
+		if err := l.Spec.FluentdSpec.SetDefaults(); err != nil {
+			return err
+		}
 	}
 	if l.Spec.ConfigCheck.TimeoutSeconds == 0 {
 		l.Spec.ConfigCheck.TimeoutSeconds = 10

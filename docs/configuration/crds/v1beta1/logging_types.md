@@ -50,6 +50,12 @@ Fluentd statefulset configuration
 
 Default: -
 
+### fluentdRef (string, optional) {#loggingspec-fluentdref}
+
+Fluentd statefulset configuration reference by name 
+
+Default: -
+
 ### syslogNG (*SyslogNGSpec, optional) {#loggingspec-syslogng}
 
 Syslog-NG statefulset configuration 

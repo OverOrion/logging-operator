@@ -338,13 +338,13 @@ func (r LoggingResourceRepository) FluentbitsFor(ctx context.Context, logging v1
 	return res, nil
 }
 
-func (r LoggingResourceRepository) FluentdConfigFor(ctx context.Context, logging v1beta1.Logging) (*v1beta1.FluentdConfig, error) {
-	var list v1beta1.FluentdConfigList
+func (r LoggingResourceRepository) FluentdConfigFor(ctx context.Context, logging v1beta1.Logging) (*v1beta1.Fluentd, error) {
+	var list v1beta1.FluentdList
 	if err := r.Client.List(ctx, &list); err != nil {
 		return nil, err
 	}
 
-	var res []v1beta1.FluentdConfig
+	var res []v1beta1.Fluentd
 	for _, i := range list.Items {
 		if i.Name == logging.Spec.FluentdRef {
 			res = append(res, i)
