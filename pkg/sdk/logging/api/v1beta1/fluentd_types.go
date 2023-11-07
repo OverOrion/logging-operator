@@ -131,8 +131,21 @@ type FluentdConfig struct {
 	Status NodeAgentStatus `json:"status,omitempty"`
 }
 
+// FluentdConfigStatus
+type FluentdConfigStatus struct {
+}
+
+// +kubebuilder:object:root=true
+
+// FluentdConfigList
+type FluentdConfigList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []FluentdConfig `json:"items"`
+}
+
 func init() {
-	SchemeBuilder.Register(&FluentdConfig{})
+	SchemeBuilder.Register(&FluentdConfig{}, &FluentdConfigList{})
 }
 
 // +kubebuilder:object:generate=true
