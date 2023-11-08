@@ -435,6 +435,10 @@ func SetupLoggingWithManager(mgr ctrl.Manager, logger logr.Logger) *ctrl.Builder
 		case *loggingv1beta1.LoggingRoute:
 			return reconcileRequestsForLoggingRef(loggingList.Items, o.Spec.Source)
 		case *loggingv1beta1.Fluentd:
+			if err := o.Spec.SetDefaults(); err != nil {
+				logger.Error(err, "failed to initialize detached fluentd")
+				return nil
+			}
 			return reconcileRequestsForLoggingRef(loggingList.Items, o.Namespace)
 		case *corev1.Secret:
 			r := regexp.MustCompile(`^logging\.banzaicloud\.io/(.*)`)
