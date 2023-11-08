@@ -185,7 +185,7 @@ func newFluentbitNetwork(network v1beta1.FluentbitNetwork) (result FluentbitNetw
 func (r *Reconciler) configSecret() (runtime.Object, reconciler.DesiredState, error) {
 	ctx := context.TODO()
 	fluentdSpec := r.Logging.Spec.FluentdSpec
-	if detachedFluentd := fluentd.GetFluentd(ctx, r.Client, r.Log, r.Logging.Spec.ControlNamespace); detachedFluentd != nil {
+	if detachedFluentd := fluentd.GetFluentd(ctx, r.resourceReconciler.Client, r.resourceReconciler.Log, r.Logging.Spec.ControlNamespace); detachedFluentd != nil {
 		fluentdSpec = &detachedFluentd.Spec
 	}
 
