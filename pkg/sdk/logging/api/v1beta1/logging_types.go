@@ -491,6 +491,20 @@ func (l *Logging) GetFluentdLabels(component string, f FluentdSpec) map[string]s
 	)
 }
 
+// func (l *Logging) GetFluentdLabels(component string, f *FluentdSpec) map[string]string {
+// 	var labelsToMerge []map[string]string
+// 	if f != nil {
+// 		labelsToMerge = append(labelsToMerge, f.Labels)
+// 	}
+// 	labelsToMerge = append(labelsToMerge, map[string]string{
+// 		"app.kubernetes.io/name":      "fluentd",
+// 		"app.kubernetes.io/component": component,
+// 	})
+// 	labelsToMerge = append(labelsToMerge, GenerateLoggingRefLabels(l.ObjectMeta.GetName()))
+
+// 	return util.MergeLabels(labelsToMerge...)
+// }
+
 // SyslogNGObjectMeta creates an objectMeta for resource syslog-ng
 func (l *Logging) SyslogNGObjectMeta(name, component string) metav1.ObjectMeta {
 	o := metav1.ObjectMeta{
