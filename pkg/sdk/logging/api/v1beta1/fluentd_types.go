@@ -107,21 +107,21 @@ type FluentdSpec struct {
 	CompressConfigFile      bool                         `json:"compressConfigFile,omitempty"`
 }
 
-// +name:"FluentdConfig"
+// +name:"Fluentd"
 // +weight:"200"
-type _hugoFluentdConfig interface{} //nolint:deadcode,unused
+type _hugoFluent interface{} //nolint:deadcode,unused
 
-// +name:"FluentdConfig"
+// +name:"Fluent"
 // +version:"v1beta1"
-// +description:"FluentdConfig is a reference to the desired Fluentd state"
-type _metaFluentdConfig interface{} //nolint:deadcode,unused
+// +description:"Fluentd is a reference to the desired Fluentd state"
+type _metaFluentd interface{} //nolint:deadcode,unused
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:categories=logging-all
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// NodeAgent
+// Fluentd
 type Fluentd struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

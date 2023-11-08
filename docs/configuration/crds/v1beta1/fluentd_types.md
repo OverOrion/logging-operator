@@ -216,14 +216,14 @@ Default: -
 
 
 ---
-title: FluentdConfig
+title: Fluentd
 weight: 200
 generated_file: true
 ---
 
 ## Fluentd
 
-NodeAgent
+Fluentd
 
 ###  (metav1.TypeMeta, required) {#fluentd-}
 
