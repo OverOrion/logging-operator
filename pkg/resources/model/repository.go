@@ -354,7 +354,9 @@ func (r LoggingResourceRepository) FluentdConfigFor(ctx context.Context, logging
 		return nil, errors.New("multiple fluentd configurations found, only one is allowed")
 	}
 	if len(res) != 0 {
-		return &res[0], nil
+		// Detached fluentd configuration found
+		err := res[0].Spec.SetDefaults()
+		return &res[0], err
 	} else {
 		return nil, nil
 	}
