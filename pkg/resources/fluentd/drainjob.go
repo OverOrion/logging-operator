@@ -132,8 +132,8 @@ func withoutFluentOutLogrotate(spec *v1beta1.FluentdSpec) *v1beta1.FluentdSpec {
 
 func (r *Reconciler) getDrainerLabels() map[string]string {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
-	labels := r.Logging.GetFluentdLabels(ComponentDrainer, fluentdSpec)
+	fluentdSpec := r.GetFluentdSpec(ctx)
+	labels := r.Logging.GetFluentdLabels(ComponentDrainer, *fluentdSpec)
 
 	for key, value := range fluentdSpec.Scaling.Drain.Labels {
 		labels[key] = value

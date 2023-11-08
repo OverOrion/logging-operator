@@ -82,12 +82,12 @@ type Desire struct {
 	BeforeUpdateHook func(runtime.Object) (reconciler.DesiredState, error)
 }
 
-func (r *Reconciler) getFluentd(ctx context.Context, log logr.Logger) *v1beta1.Fluentd {
+func GetFluentd(ctx context.Context, Client client.Client, log logr.Logger, controlNamespace string) *v1beta1.Fluentd {
 	fluentdList := v1beta1.FluentdList{}
 	// Detached fluentd must be in the `control namespace`
-	nsOpt := client.InNamespace(r.Logging.Spec.ControlNamespace)
+	nsOpt := client.InNamespace(controlNamespace)
 
-	if err := r.Client.List(ctx, &fluentdList, nsOpt); err != nil {
+	if err := Client.List(ctx, &fluentdList, nsOpt); err != nil {
 		log.Error(err, "listing fluentd configuration")
 		return nil
 	}
@@ -103,17 +103,17 @@ func (r *Reconciler) getFluentd(ctx context.Context, log logr.Logger) *v1beta1.F
 	return nil
 }
 
-func (r *Reconciler) getFluentdSpec(ctx context.Context) v1beta1.FluentdSpec {
+func (r *Reconciler) GetFluentdSpec(ctx context.Context) *v1beta1.FluentdSpec {
 	fluentdSpec := r.Logging.Spec.FluentdSpec
-	if detachedFluentd := r.getFluentd(ctx, r.Log); detachedFluentd != nil {
+	if detachedFluentd := GetFluentd(ctx, r.Client, r.Log, r.Logging.Spec.ControlNamespace); detachedFluentd != nil {
 		fluentdSpec = &detachedFluentd.Spec
 	}
-	return *fluentdSpec
+	return fluentdSpec
 }
 
 func (r *Reconciler) getServiceAccount() string {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.Security.ServiceAccount != "" {
 		return fluentdSpec.Security.ServiceAccount
 	}
@@ -134,7 +134,7 @@ func New(client client.Client, log logr.Logger,
 func (r *Reconciler) Reconcile(ctx context.Context) (*reconcile.Result, error) {
 	patchBase := client.MergeFrom(r.Logging.DeepCopy())
 
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if err := fluentdSpec.SetDefaults(); err != nil {
 		return &reconcile.Result{}, err
 	}
@@ -301,14 +301,14 @@ func (r *Reconciler) statusUpdate(ctx context.Context, patchBase client.Patch, r
 }
 
 func (r *Reconciler) reconcileDrain(ctx context.Context) (*reconcile.Result, error) {
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.DisablePvc || !fluentdSpec.Scaling.Drain.Enabled {
 		r.Log.Info("fluentd buffer draining is disabled")
 		return nil, nil
 	}
 
 	nsOpt := client.InNamespace(r.Logging.Spec.ControlNamespace)
-	fluentdLabelSet := r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec)
+	fluentdLabelSet := r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec)
 
 	var pvcList corev1.PersistentVolumeClaimList
 	if err := r.Client.List(ctx, &pvcList, nsOpt,
@@ -343,7 +343,7 @@ func (r *Reconciler) reconcileDrain(ctx context.Context) (*reconcile.Result, err
 	}
 
 	var jobList batchv1.JobList
-	if err := r.Client.List(ctx, &jobList, nsOpt, client.MatchingLabels(r.Logging.GetFluentdLabels(ComponentDrainer, fluentdSpec))); err != nil {
+	if err := r.Client.List(ctx, &jobList, nsOpt, client.MatchingLabels(r.Logging.GetFluentdLabels(ComponentDrainer, *fluentdSpec))); err != nil {
 		return nil, errors.WrapIf(err, "listing buffer drainer jobs")
 	}
 

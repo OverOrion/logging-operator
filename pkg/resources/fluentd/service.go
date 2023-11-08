@@ -28,7 +28,7 @@ import (
 
 func (r *Reconciler) service() (runtime.Object, reconciler.DesiredState, error) {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	desired := &corev1.Service{
 		ObjectMeta: r.FluentdObjectMeta(ServiceName, ComponentFluentd),
 		Spec: corev1.ServiceSpec{
@@ -46,7 +46,7 @@ func (r *Reconciler) service() (runtime.Object, reconciler.DesiredState, error) 
 					TargetPort: intstr.IntOrString{IntVal: fluentdSpec.Port},
 				},
 			},
-			Selector: r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec),
+			Selector: r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec),
 			Type:     corev1.ServiceTypeClusterIP,
 		},
 	}
@@ -65,7 +65,7 @@ func (r *Reconciler) service() (runtime.Object, reconciler.DesiredState, error) 
 
 func (r *Reconciler) serviceMetrics() (runtime.Object, reconciler.DesiredState, error) {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.Metrics != nil {
 		return &corev1.Service{
 			ObjectMeta: r.FluentdObjectMeta(ServiceName+"-metrics", ComponentFluentd),
@@ -78,7 +78,7 @@ func (r *Reconciler) serviceMetrics() (runtime.Object, reconciler.DesiredState, 
 						TargetPort: intstr.IntOrString{IntVal: fluentdSpec.Metrics.Port},
 					},
 				},
-				Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec),
+				Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec),
 				Type:      corev1.ServiceTypeClusterIP,
 				ClusterIP: "None",
 			},
@@ -92,7 +92,7 @@ func (r *Reconciler) serviceMetrics() (runtime.Object, reconciler.DesiredState, 
 func (r *Reconciler) monitorServiceMetrics() (runtime.Object, reconciler.DesiredState, error) {
 	var SampleLimit uint64 = 0
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.Metrics != nil && fluentdSpec.Metrics.ServiceMonitor {
 		objectMetadata := r.FluentdObjectMeta(ServiceName+"-metrics", ComponentFluentd)
 		if fluentdSpec.Metrics.ServiceMonitorConfig.AdditionalLabels != nil {
@@ -118,7 +118,7 @@ func (r *Reconciler) monitorServiceMetrics() (runtime.Object, reconciler.Desired
 					Scheme:               fluentdSpec.Metrics.ServiceMonitorConfig.Scheme,
 					TLSConfig:            fluentdSpec.Metrics.ServiceMonitorConfig.TLSConfig,
 				}},
-				Selector:          v12.LabelSelector{MatchLabels: r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec)},
+				Selector:          v12.LabelSelector{MatchLabels: r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec)},
 				NamespaceSelector: v1.NamespaceSelector{MatchNames: []string{r.Logging.Spec.ControlNamespace}},
 				SampleLimit:       &SampleLimit,
 			},
@@ -132,7 +132,7 @@ func (r *Reconciler) monitorServiceMetrics() (runtime.Object, reconciler.Desired
 
 func (r *Reconciler) serviceBufferMetrics() (runtime.Object, reconciler.DesiredState, error) {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.BufferVolumeMetrics != nil {
 		port := int32(defaultBufferVolumeMetricsPort)
 		if fluentdSpec.BufferVolumeMetrics != nil && fluentdSpec.BufferVolumeMetrics.Port != 0 {
@@ -150,7 +150,7 @@ func (r *Reconciler) serviceBufferMetrics() (runtime.Object, reconciler.DesiredS
 						TargetPort: intstr.IntOrString{IntVal: port},
 					},
 				},
-				Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec),
+				Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec),
 				Type:      corev1.ServiceTypeClusterIP,
 				ClusterIP: "None",
 			},
@@ -164,7 +164,7 @@ func (r *Reconciler) serviceBufferMetrics() (runtime.Object, reconciler.DesiredS
 func (r *Reconciler) monitorBufferServiceMetrics() (runtime.Object, reconciler.DesiredState, error) {
 	var SampleLimit uint64 = 0
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	if fluentdSpec.BufferVolumeMetrics != nil && fluentdSpec.BufferVolumeMetrics.ServiceMonitor {
 		objectMetadata := r.FluentdObjectMeta(ServiceName+"-buffer-metrics", ComponentFluentd)
 		if fluentdSpec.BufferVolumeMetrics.ServiceMonitorConfig.AdditionalLabels != nil {
@@ -189,7 +189,7 @@ func (r *Reconciler) monitorBufferServiceMetrics() (runtime.Object, reconciler.D
 					Scheme:               fluentdSpec.BufferVolumeMetrics.ServiceMonitorConfig.Scheme,
 					TLSConfig:            fluentdSpec.BufferVolumeMetrics.ServiceMonitorConfig.TLSConfig,
 				}},
-				Selector:          v12.LabelSelector{MatchLabels: r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec)},
+				Selector:          v12.LabelSelector{MatchLabels: r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec)},
 				NamespaceSelector: v1.NamespaceSelector{MatchNames: []string{r.Logging.Spec.ControlNamespace}},
 				SampleLimit:       &SampleLimit,
 			},
@@ -203,7 +203,7 @@ func (r *Reconciler) monitorBufferServiceMetrics() (runtime.Object, reconciler.D
 
 func (r *Reconciler) headlessService() (runtime.Object, reconciler.DesiredState, error) {
 	ctx := context.TODO()
-	fluentdSpec := r.getFluentdSpec(ctx)
+	fluentdSpec := r.GetFluentdSpec(ctx)
 	desired := &corev1.Service{
 		ObjectMeta: r.FluentdObjectMeta(ServiceName+"-headless", ComponentFluentd),
 		Spec: corev1.ServiceSpec{
@@ -223,7 +223,7 @@ func (r *Reconciler) headlessService() (runtime.Object, reconciler.DesiredState,
 					Port: fluentdSpec.Port,
 				},
 			},
-			Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, fluentdSpec),
+			Selector:  r.Logging.GetFluentdLabels(ComponentFluentd, *fluentdSpec),
 			Type:      corev1.ServiceTypeClusterIP,
 			ClusterIP: corev1.ClusterIPNone,
 		},
